@@ -206,14 +206,7 @@ void CMFCIEEEDlg::OnBnClickedSubBut()
 	fliter(desstr, str2);
 
 	CString data1;
-	if (lh < 46)
-	{
-		for (int i = lh; i < 46; i++)
-		{
-			str3 = str3 + "0";
 
-		}
-	}
 
 	data1 = ShowHexdata(str3);
 
@@ -247,6 +240,9 @@ void CMFCIEEEDlg::OnBnClickedSubBut()
 
 	CString fcs = FCS(IEEE, check);
 
+	CString SS=TransBinToHex(fcs);
+
+
 	IEEE += fcs;
 
 
@@ -256,10 +252,10 @@ void CMFCIEEEDlg::OnBnClickedSubBut()
 	res_list.SetItemText(clicktime, 3, _T(desstr[0] +' '+ desstr[1] + ' ' + desstr[2] + ' ' + desstr[3] + ' ' + desstr[4] + ' ' + desstr[5]));
 	res_list.SetItemText(clicktime, 4, _T(teml));
 	res_list.SetItemText(clicktime, 5, _T(data1));
-	res_list.SetItemText(clicktime, 6, _T(fcs));
+	res_list.SetItemText(clicktime, 6, _T(SS));
 
 
-	Fcs.SetWindowTextA(fcs);
+	Fcs.SetWindowTextA(SS);
 	res1.SetWindowTextA(data1);
 
 	clicktime++;
@@ -272,6 +268,7 @@ void CMFCIEEEDlg::OnBnClickedRefresh()
 	srcmac.SetWindowTextA("");
 	desmac.SetWindowTextA("");
 	data.SetWindowTextA("");
+	Fcs.SetWindowTextA("");
 }
 
 
@@ -390,6 +387,11 @@ CString CMFCIEEEDlg::TransDatatoHex(CString tem)
 		data = data + temp1;
 	}
 
+	while (data.GetLength()<92)
+	{
+		data += "00";
+	}
+
 	return data;
 }
 
@@ -404,6 +406,10 @@ CString CMFCIEEEDlg::ShowHexdata(CString tem)
 		data = data + temp1;
 	}
 
+	while (data.GetLength() < 138)
+	{
+		data += "00 ";
+	}
 	return data;
 }
 
@@ -490,6 +496,31 @@ CString CMFCIEEEDlg::FCS(CString data, CString check)
 	return ba;//返回长度为一个字节的FCS
 
 }
+
+//二进制转换为4Byte的十六进制
+CString CMFCIEEEDlg::TransBinToHex(CString tem)
+{
+	CString Hex="00 00 00 ";
+	int t=0;
+	for (int i = 0; i < 8; i++)
+	{	
+		int a = tem.GetAt(i);
+		if (a=='1')
+		{
+			t += int(pow(2, 7-i));
+		}
+	}
+
+	char a[20];
+
+	sprintf(a, "%x", t);
+
+	Hex += a;
+
+	return Hex;
+
+}
+
 
 void CMFCIEEEDlg::OnLvnItemchangedResList(NMHDR* pNMHDR, LRESULT* pResult)
 {
