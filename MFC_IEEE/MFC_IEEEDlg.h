@@ -46,4 +46,6 @@ public:
 	CString TransDatatoHex(CString tem);
 	CString ShowHexdata(CString tem);
 	CListCtrl res_list;
+	CEdit Fcs;
+	afx_msg void OnLvnItemchangedResList(NMHDR* pNMHDR, LRESULT* pResult);
 };

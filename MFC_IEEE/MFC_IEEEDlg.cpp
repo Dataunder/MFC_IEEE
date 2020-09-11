@@ -70,6 +70,7 @@ void CMFCIEEEDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_DATA_EDIT, data);
 	DDX_Control(pDX, IDC_RESULT_1, res1);
 	DDX_Control(pDX, IDC_RES_LIST, res_list);
+	DDX_Control(pDX, IDC_FCS, Fcs);
 }
 
 BEGIN_MESSAGE_MAP(CMFCIEEEDlg, CDialogEx)
@@ -78,7 +79,7 @@ BEGIN_MESSAGE_MAP(CMFCIEEEDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_SUB_BUT, &CMFCIEEEDlg::OnBnClickedSubBut)
 	ON_BN_CLICKED(IDC_REFRESH, &CMFCIEEEDlg::OnBnClickedRefresh)
-	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST5, &CMFCIEEEDlg::OnLvnItemchangedList5)
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_RES_LIST, &CMFCIEEEDlg::OnLvnItemchangedResList)
 END_MESSAGE_MAP()
 
 
@@ -205,6 +206,15 @@ void CMFCIEEEDlg::OnBnClickedSubBut()
 	fliter(desstr, str2);
 
 	CString data1;
+	if (lh < 46)
+	{
+		for (int i = lh; i < 46; i++)
+		{
+			str3 = str3 + "0";
+
+		}
+	}
+
 	data1 = ShowHexdata(str3);
 
 
@@ -249,7 +259,8 @@ void CMFCIEEEDlg::OnBnClickedSubBut()
 	res_list.SetItemText(clicktime, 6, _T(fcs));
 
 
-	res1.SetWindowTextA(fcs);
+	Fcs.SetWindowTextA(fcs);
+	res1.SetWindowTextA(data1);
 
 	clicktime++;
 }
@@ -258,6 +269,9 @@ void CMFCIEEEDlg::OnBnClickedSubBut()
 void CMFCIEEEDlg::OnBnClickedRefresh()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	srcmac.SetWindowTextA("");
+	desmac.SetWindowTextA("");
+	data.SetWindowTextA("");
 }
 
 
@@ -284,23 +298,6 @@ void CMFCIEEEDlg::fliter(CString sub[], CString tem)
 
 }
 
-//使选中的LISTBOX具有反馈机制
-void CMFCIEEEDlg::OnLvnItemchangedList5(NMHDR* pNMHDR, LRESULT* pResult)
-{
-	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
-	// TODO: 在此添加控件通知处理程序代码
-	*pResult = 0;
-	CString strLangName;    // 选择语言的名称字符串   
-	NMLISTVIEW* pNMListView = (NMLISTVIEW*)pNMHDR;
-
-	if (-1 != pNMListView->iItem)        // 如果iItem不是-1，就说明有列表项被选择   
-	{
-		// 获取被选择列表项第一个子项的文本   
-		strLangName = res_list.GetItemText(pNMListView->iItem, 0);
-		// 将选择的语言显示与编辑框中   
-		SetDlgItemText(IDC_RES_LIST, strLangName);
-	}
-}
 
 //将16进制串转换为2进制串
 CString CMFCIEEEDlg::Transtype(CString data)
@@ -491,5 +488,23 @@ CString CMFCIEEEDlg::FCS(CString data, CString check)
 	}
 
 	return ba;//返回长度为一个字节的FCS
+
+}
+
+void CMFCIEEEDlg::OnLvnItemchangedResList(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	*pResult = 0;
+	CString strLangName;    // 选择语言的名称字符串   
+	NMLISTVIEW* pNMListView = (NMLISTVIEW*)pNMHDR;
+
+	if (-1 != pNMListView->iItem)        // 如果iItem不是-1，就说明有列表项被选择   
+	{
+		// 获取被选择列表项第一个子项的文本   
+		strLangName = res_list.GetItemText(pNMListView->iItem, 0);
+		// 将选择的语言显示与编辑框中   
+		SetDlgItemText(IDC_RES_LIST, strLangName);
+	}
 
 }
