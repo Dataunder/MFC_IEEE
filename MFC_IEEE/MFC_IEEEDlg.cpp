@@ -234,11 +234,11 @@ void CMFCIEEEDlg::OnBnClickedSubBut()
 	data2 = Transtype(data);
 
 	CString IEEE;
-	IEEE = smac + dmac + len + data2;
+	IEEE = dmac + smac + len + data2;
 
 	CString check = "100000111";
 
-	CString fcs = FCS(IEEE, check);
+	CString fcs = FCS(data2, check);
 
 	CString SS=TransBinToHex(fcs);
 
@@ -248,8 +248,8 @@ void CMFCIEEEDlg::OnBnClickedSubBut()
 
 	res_list.InsertItem(clicktime, _T("aa aa aa aa aa aa aa "));
 	res_list.SetItemText(clicktime, 1, _T("ab "));
-	res_list.SetItemText(clicktime, 2, _T(srcstr[0] +' '+ srcstr[1] + ' ' + srcstr[2] + ' ' + srcstr[3] + ' ' + srcstr[4] + ' ' + srcstr[5]));
-	res_list.SetItemText(clicktime, 3, _T(desstr[0] +' '+ desstr[1] + ' ' + desstr[2] + ' ' + desstr[3] + ' ' + desstr[4] + ' ' + desstr[5]));
+	res_list.SetItemText(clicktime, 2, _T(desstr[0] +' '+ desstr[1] + ' ' + desstr[2] + ' ' + desstr[3] + ' ' + desstr[4] + ' ' + desstr[5]));
+	res_list.SetItemText(clicktime, 3, _T(srcstr[0] +' '+ srcstr[1] + ' ' + srcstr[2] + ' ' + srcstr[3] + ' ' + srcstr[4] + ' ' + srcstr[5]));
 	res_list.SetItemText(clicktime, 4, _T(teml));
 	res_list.SetItemText(clicktime, 5, _T(data1));
 	res_list.SetItemText(clicktime, 6, _T(SS));
